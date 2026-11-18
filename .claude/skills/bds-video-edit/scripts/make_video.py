@@ -9,11 +9,12 @@ import os, sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-FD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+FD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fonts")
 F = {k: os.path.join(FD, v) for k, v in dict(
     cond="Barlow-XB.ttf", script="Dancing.ttf", serif="Playfair-XB.ttf", light="BVP-Light.ttf",
     med="BVP-Medium.ttf", it="BVP-MedIt.ttf", black="BVP-Black.ttf").items()}
-W, H, FPS, DUR = 1080, 1920, 30, 6.17
+W, H, FPS = 1080, 1920, 30
+DUR = float(os.environ.get("VIDEO_DUR", "6.17"))
 MINT, MINT_GLOW = (100, 255, 210), (0, 200, 160)
 WHITE, GOLD_TOP, GOLD_BOT = (255, 255, 255), (255, 244, 214), (214, 170, 96)
 

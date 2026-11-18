@@ -1,9 +1,10 @@
 """Synthesize original background music + SFX (pop, whoosh, tick, riser, impact, ding)
 timed to the video's text/transition events. Output: 44.1kHz stereo WAV."""
-import sys, wave
+import os, sys, wave
 import numpy as np
 
-SR, DUR = 44100, 6.17
+SR = 44100
+DUR = float(os.environ.get("VIDEO_DUR", "6.17"))
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 t_all = np.arange(N) / SR
