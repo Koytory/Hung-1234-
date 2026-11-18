@@ -38,9 +38,10 @@ def env_adsr(n, a, r):
 
 # ================= MUSIC (C major, 120 bpm, bright spring) =================
 BEAT = 0.5
-C2, C3, TURN, CTA, END = 4.0, 13.1667, 21.0, 27.9, DUR
+D = 6.8667
+C2, C2B, C3, TURN, CTA, END = 4.0, 4.0 + D, 13.1667 + D, 21.0 + D, 27.9 + D, DUR
 BUILD2 = (C3 - 1.0, C3)                      # filter closes, drums drop out, then 2nd drop
-OUTRO = 29.6                                 # drums stop, pad rings out
+OUTRO = 29.6 + D                                 # drums stop, pad rings out
 PROG = [[48, 55, 60, 64, 67], [43, 55, 59, 62, 67], [45, 57, 60, 64, 69], [41, 57, 60, 65, 69]]   # C G Am F
 def chord_at(t):
     if t < CUT: return [53, 57, 60, 64, 67]                     # Fmaj9 intro
@@ -161,15 +162,17 @@ put(sfx, riser(0.65), CUT - 0.65, 0.9); put(sfx, whoosh(0.5), 1.85, 0.8, pan=0.3
 put(sfx, impact(0.7), CUT); put(sfx, crash(), CUT, 0.9)                      # DROP 1
 tier_sfx(CUT + .1); tick_line(CUT + .15, 6)
 put(sfx, whoosh(0.5), 3.75, 0.8, pan=-0.3); tier_sfx(C2 + .15); tick_line(C2 + .2, 7)
-put(sfx, whoosh(0.45, up=False), 7.6, 0.5)
-put(dry, pop(1100), 8.1, 0.7)                                                # glass card
-for i, n in enumerate([88, 91, 96]): put(sfx, bell(midi(n), 0.06), 8.12 + i * 0.06, pan=0.3)
-tick_line(8.1, 7)
+put(sfx, whoosh(0.45, up=False), C2 + 3.15, 0.5); tier_sfx(C2 + 3.5); tick_line(C2 + 3.55, 8)
+put(sfx, whoosh(0.5), C2B - .25, 0.8, pan=0.3); tier_sfx(C2B + .15); tick_line(C2B + .2, 7)
+put(sfx, whoosh(0.45, up=False), 7.6 + D, 0.5)
+put(dry, pop(1100), 8.1 + D, 0.7)                                            # glass card
+for i, n in enumerate([88, 91, 96]): put(sfx, bell(midi(n), 0.06), 8.12 + D + i * 0.06, pan=0.3)
+tick_line(8.1 + D, 7)
 put(sfx, riser(1.0), C3 - 1.0, 1.0); put(sfx, impact(0.9), C3); put(sfx, crash(), C3, 1.0)   # DROP 2
 tier_sfx(C3 + .25); tick_line(C3 + .3, 7)
 put(sfx, whoosh(0.5), TURN - .25, 0.8, pan=0.3); tier_sfx(TURN + .2); tick_line(TURN + .25, 7)
-put(sfx, whoosh(0.5), 27.65, 0.8, pan=-0.3); tier_sfx(27.9); tick_line(27.95, 7)
-put(dry, pop(900), 29.7, 0.9); put(sfx, bell(midi(88), 0.18), 29.75); put(sfx, bell(midi(95), 0.09), 29.77)  # LƯU VIDEO ding
+put(sfx, whoosh(0.5), 27.65 + D, 0.8, pan=-0.3); tier_sfx(27.9 + D); tick_line(27.95 + D, 7)
+put(dry, pop(900), 29.7 + D, 0.9); put(sfx, bell(midi(88), 0.18), 29.75 + D); put(sfx, bell(midi(95), 0.09), 29.77 + D)  # LƯU VIDEO ding
 put(sfx, whoosh(0.5), DUR - 0.6, 0.5)
 
 # ================= reverb (stereo FFT convolution) =================
