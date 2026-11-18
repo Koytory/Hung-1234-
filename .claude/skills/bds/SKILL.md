@@ -5,6 +5,13 @@ description: Phong cách quay + edit video bất động sản (BĐS) dạng Tik
 
 # Phong cách quay & edit video BĐS
 
+## Kiểu đã đặt tên (người dùng gõ `/bds <số>` hoặc nhắn "edit kiểu bds <số>")
+| Lệnh | Kiểu | Làm thế nào |
+|---|---|---|
+| **`/bds 1`** | **Tour phân khu nhiều cảnh** (video "Đi thăm phân khu Mùa Xuân" – Eco 2, bản v3, 38s) | Copy `scripts/template_tour.py` và làm y hệt: hook vàng ánh kim rơi + keyword xanh ngọc wipe + hoa rơi; mỗi cảnh chữ 3 tầng với keyword **nằm sau người**; phụ đề nghiêng từng từ; thẻ kính; chuyển cảnh light leak hồng cam, lao tới nhòe tâm, ngả đỏ→chớp trắng, chớp trắng in hình người; `grade_spring`; CTA BẢNG GIÁ → LƯU VIDEO; nhạc build→drop 2 lần + SFX có reverb (mẫu `eco2/full_audio.py`). Video < 30s thì làm chậm 0,8–0,9x (minterpolate) + giữ khung cuối. Đổi chủ đề/màu theo nội dung mới (hoa rơi chỉ khi chủ đề mùa Xuân/Tết). |
+
+Không kèm số (`/bds`) → dùng phong cách chung bên dưới, chọn phần phù hợp với video.
+
 Người dùng nói tiếng Việt → trả lời bằng tiếng Việt. Video đầu ra: MP4 dọc 1080x1920, 30fps, H.264 + AAC, âm lượng ~ -14/-15 LUFS, đỉnh ≤ -1 dBTP.
 
 ## Công cụ có sẵn trong skill này
