@@ -9,8 +9,30 @@ description: Phong cách quay + edit video bất động sản (BĐS) dạng Tik
 | Lệnh | Kiểu | Làm thế nào |
 |---|---|---|
 | **`/bds 1`** | **Tour phân khu nhiều cảnh** (video "Đi thăm phân khu Mùa Xuân" – Eco 2, bản v3, 38s) | Copy `scripts/template_tour.py` và làm y hệt: hook vàng ánh kim rơi + keyword xanh ngọc wipe + hoa rơi; mỗi cảnh chữ 3 tầng với keyword **nằm sau người**; phụ đề nghiêng từng từ; thẻ kính; chuyển cảnh light leak hồng cam, lao tới nhòe tâm, ngả đỏ→chớp trắng, chớp trắng in hình người; `grade_spring`; CTA BẢNG GIÁ → LƯU VIDEO; nhạc build→drop 2 lần + SFX có reverb (mẫu `eco2/full_audio.py`). Video < 30s thì làm chậm 0,8–0,9x (minterpolate) + giữ khung cuối. Đổi chủ đề/màu theo nội dung mới (hoa rơi chỉ khi chủ đề mùa Xuân/Tết). |
+| **`/bds 2`** | **Người dẫn + tour nhà điện ảnh** (học từ video mẫu 4 + 5: môi giới nói vào máy ở nhiều vị trí trong nhà, xen cảnh tour nhà quay đẹp) | Xem mục **"Kiểu /bds 2"** bên dưới. Ảnh xem trước kiểu chữ: `bds2_preview.jpg` trong thư mục skill. |
 
 Không kèm số (`/bds`) → dùng phong cách chung bên dưới, chọn phần phù hợp với video.
+
+## Kiểu /bds 2 — Người dẫn + tour nhà điện ảnh (video mẫu 4 + 5)
+**Cấu trúc**: Hook người dẫn nói câu gây tò mò (1–3s) → xen kẽ *người dẫn nói* (mỗi đoạn 3–10s, mỗi đoạn 1 vị trí khác) và *cảnh tour nhà* (1–3s/cảnh, cắt theo nhịp) → kết bằng người dẫn kêu gọi + thẻ tên/SĐT (`lower_third`) hoặc nút `cta_pill("Bấm link ở bio…")` + flycam nếu có.
+
+**Chữ — phụ đề động (`kinetic`)**: đặt giữa ngực người dẫn, mỗi lúc 1–3 dòng xếp chồng, mỗi dòng 1 kiểu, hiện mờ→nét lần lượt (0,18s/dòng), cụm cũ mờ đi khi cụm mới vào:
+- Từ thường: `thin` (trắng mảnh, chữ thường).
+- Từ khóa — đổi kiểu liên tục cho sinh động, dùng bảng màu **tím #7C4DC4 – xanh ngọc #3FB8C4 – trắng**:
+  `serif` (chữ có chân IN HOA tím, kiểu "LET ME"), `bold` (đậm IN HOA tím, "YOUR PROPERTY"), `script` (viết tay xanh ngọc, "investment"), `teal` (đậm xanh ngọc, "AGENT"), `glow` (gradient hồng→xanh phát sáng cho con số, "TOP 1%"), `strike` (gạch ngang đỏ cho câu phủ định, "IS NOT"), `mint` (chữ khóa xanh ngọc lớn của /bds 1).
+- Từ khóa lớn đặt **sau đầu người dẫn** (`behind=(index,)` + `PersonMask`).
+- `pill_tag` (viên thuốc đen viền vàng) bật ra quanh người khi liệt kê phẩm chất/tiện ích ("Uy tín", "Minh bạch", "Hồ bơi"…), xuất hiện lần lượt.
+- Huy hiệu/nhãn đối tác nhỏ (kiểu "Zillow Showcase") → chỉ dùng logo người dùng cung cấp.
+- Cảnh tour: chữ tối giản 1–2 từ, từ khóa to đậm nằm sau người (video mẫu 4).
+
+**Chuyển cảnh**: giữa các đoạn người dẫn → `bloom_flash` (cháy sáng ~0,2–0,3s, kèm whoosh nhẹ + tiếng chuông ngân); giữa cảnh tour → `zoom_blur` (lao tới nhòe tâm) hoặc cắt thẳng theo nhịp; zoom chậm vào/ra mỗi shot.
+**Màu**: nội thất sáng, thoáng, trắng ấm (bão hòa nhẹ ~1.1, nâng sáng); ngoại cảnh `grade_cinematic` (teal-orange). Không dùng hoa rơi (trừ chủ đề Tết/Xuân).
+**Âm thanh**: **giọng người dẫn là chính** (−14 LUFS), nhạc nền beat nhẹ liên tục thấp hơn giọng ~18–20dB (sidechain hạ khi nói), whoosh + chuông ngân ở mỗi lần đổi vị trí, pop nhỏ khi `pill_tag` bật ra. Không cần nhạc build→drop như /bds 1.
+**Cách quay /bds 2** (bổ sung cho mục "Hướng dẫn QUAY"):
+- Chọn **4–5 vị trí** trong nhà mẫu: ngồi sofa bắt chéo chân, ngồi trên đảo bếp, ghế bành cạnh cửa sổ, đứng trung cảnh giữa phòng khách, đứng trước cửa/ngoại cảnh. Mỗi vị trí nói 2–4 câu; đổi vị trí khi chuyển ý.
+- Máy ngang ngực–mắt, cách 1,5–3m, ống 1x/2x chế độ Chân dung (xóa phông), ánh sáng cửa sổ chiếu chéo mặt; gimbal đẩy vào/trượt ngang rất chậm khi đang nói.
+- Trang phục đơn sắc trung tính, nói nhìn thẳng ống kính, tay diễn tả nhẹ. Thu tiếng bằng mic cài áo.
+- Quay thêm B-roll tour nhà theo shot list của video mẫu 4 để xen vào.
 
 Người dùng nói tiếng Việt → trả lời bằng tiếng Việt. Video đầu ra: MP4 dọc 1080x1920, 30fps, H.264 + AAC, âm lượng ~ -14/-15 LUFS, đỉnh ≤ -1 dBTP.
 
@@ -96,6 +118,7 @@ Người dùng nói tiếng Việt → trả lời bằng tiếng Việt. Video 
 2. **Video mẫu 2** (phòng thu, so sánh 2 dự án): zoom chậm, chữ khóa lao vào/ra có vệt nhòe, cấu trúc 3 tầng, "#1 / #2", khung ảnh nhỏ bo góc, CTA "LƯU VIDEO" + bookmark, chớp trắng in hình người.
 3. **Video mẫu 3** (trong xe + công trường): hook tiêu đề nhiều tầng (vàng ánh kim + viết tay + tên dự án xanh ngọc), phụ đề nghiêng tô màu từ khóa, nhãn "THÁP 1–4", thẻ kính nghiêng, lật trang, ngả đỏ trước chớp sáng.
 4. **Video mẫu 4** (tour nhà điện ảnh, người dẫn nữ): **cách quay** — người dẫn bước tới máy xóa phông, góc thấp siêu rộng ngoại cảnh, tiền cảnh lá cây, shot lao tới làm chuyển cảnh nhòe tâm/speed ramp, lướt máy sát mặt bàn bếp, đẩy qua cửa, ngửa nhìn trần, chi tiết từ trên xuống, flycam kết; cắt nhanh theo nhịp (~30 cắt/phút); màu teal-orange tương phản; chữ tối giản 1–2 từ, từ khóa to đậm **nằm sau người**; thẻ giá nổi trên lòng bàn tay; thẻ tên + SĐT ở cuối; nhạc beat liên tục dưới giọng nói.
+5. **Video mẫu 5** (môi giới giới thiệu bản thân, cùng người dẫn video 4): talking head ở 5 vị trí trong nhà (sofa, đảo bếp, ghế bành, đứng), đổi vị trí mỗi 3–10s bằng cắt **cháy sáng** + chuông ngân; phụ đề động giữa ngực, mỗi từ khóa một kiểu chữ (serif tím, đậm tím, viết tay xanh ngọc, đậm xanh ngọc, gradient phát sáng "TOP 1%", gạch đỏ "IS NOT"), từ khóa sau đầu người dẫn, nhãn viên thuốc viền vàng bật quanh người, huy hiệu đối tác, nút "Click the link in my bio" có avatar; nội thất sáng thoáng; giọng nói là chính, nhạc nền nhẹ. → Gộp với video 4 thành **`/bds 2`**.
 
 **Đã làm được từ v3:** chữ nằm sau người, chớp trắng in hình người, chuyển cảnh lao tới nhòe tâm.
 **Chưa làm:** lật trang, nhãn chú thích từng tòa (cần chọn điểm theo dõi), thẻ giá bám theo lòng bàn tay (cần theo dõi tay), phụ đề khớp giọng (cần file giọng nói).

@@ -362,3 +362,87 @@ def run(frame_fx, elements, overlay=None):
             if isinstance(e, Behind): e.draw(fr, t, base)
             else: e.draw(fr, t)
         outp.write(fr.convert("RGB").tobytes()); n += 1
+
+
+# ================= /bds 2 — người dẫn + tour điện ảnh (video mẫu 4 + 5) =================
+PURPLE, TEAL, PILL_Y, STRIKE_RED = (124, 77, 196), (63, 184, 196), (245, 197, 24), (230, 40, 50)
+
+
+def gradient_text(text, font, size, c1=(255, 90, 220), c2=(90, 230, 255), glow=True):
+    """Chữ gradient ngang hồng→xanh có glow (kiểu 'TOP 1%')."""
+    base = text_img(text, font, size, WHITE, glow=None, shadow=False)
+    w, h = base.size
+    x = np.linspace(0, 1, w)[None, :, None]
+    arr = (np.array(c1) * (1 - x) + np.array(c2) * x) * np.ones((h, 1, 1))
+    col = Image.fromarray(arr.astype(np.uint8)).convert("RGBA"); col.putalpha(base.getchannel("A"))
+    if not glow: return col
+    g = col.filter(ImageFilter.GaussianBlur(16))
+    out = Image.alpha_composite(Image.new("RGBA", (w, h)), g)
+    out = Image.alpha_composite(out, g)
+    return Image.alpha_composite(out, col)
+
+
+def strike(im, color=STRIKE_RED, width=10):
+    """Gạch ngang đỏ qua chữ (kiểu 'IS NOT')."""
+    im = im.copy(); a = np.asarray(im.getchannel("A")) > 40
+    ys, xs = np.where(a)
+    if len(xs):
+        y = int(ys.mean()); ImageDraw.Draw(im).line([(xs.min() - 10, y), (xs.max() + 10, y)], fill=color + (255,), width=width)
+    return im
+
+
+def pill_tag(text, size=40):
+    """Nhãn viên thuốc đen viền vàng (kiểu 'Character', 'Integrity') bật ra quanh người."""
+    f = ImageFont.truetype(F["black"], size); l, _, r, _ = f.getbbox(text); asc, desc = f.getmetrics()
+    w, h = int(r - l + size * 1.4), int(asc + desc + size * .7)
+    im = Image.new("RGBA", (w + 30, h + 30)); d = ImageDraw.Draw(im)
+    sh = Image.new("RGBA", im.size); ImageDraw.Draw(sh).rounded_rectangle([15, 19, 15 + w, 19 + h], h // 2, fill=(0, 0, 0, 120))
+    im.alpha_composite(sh.filter(ImageFilter.GaussianBlur(6)))
+    d.rounded_rectangle([15, 15, 15 + w, 15 + h], h // 2, fill=(20, 20, 20, 235), outline=PILL_Y + (255,), width=4)
+    d.text((15 + size * .7 - l, 15 + size * .3), text, font=f, fill=WHITE)
+    return im
+
+
+def cta_pill(text, size=34):
+    """Nút CTA bo tròn có avatar tròn (kiểu 'Click the link in my bio')."""
+    f = ImageFont.truetype(F["med"], size); l, _, r, _ = f.getbbox(text)
+    h = int(size * 2.1); w = int(r - l + h + size * 1.2)
+    im = Image.new("RGBA", (w + 20, h + 20)); d = ImageDraw.Draw(im)
+    d.rounded_rectangle([10, 10, 10 + w, 10 + h], h // 2, fill=(245, 245, 245, 235))
+    d.ellipse([16, 16, 4 + h, 4 + h], fill=TEAL + (255,))
+    d.text((10 + h + size * .4 - l, 10 + (h - size) / 2 - 4), text, font=f, fill=(30, 30, 30))
+    return im
+
+
+def bloom_flash(a, p):
+    """Cắt cảnh 'cháy sáng' (video mẫu 5): khung lóa trắng + loang sáng, p 0..1."""
+    w = np.sin(np.pi * p)
+    small = to_img(a).resize((W // 4, H // 4)).filter(ImageFilter.GaussianBlur(12)).resize((W, H))
+    b = to_arr(small)
+    return np.clip(a * (1 + 1.6 * w) + b * 1.2 * w + 0.25 * w, 0, 1)
+
+
+KSTYLE = {   # kiểu chữ từ khóa của phụ đề động (/bds 2)
+    "thin":   lambda s: text_img(s, "light", 64, WHITE, glow_r=4),
+    "serif":  lambda s: text_img(s.upper(), "serif", 120, PURPLE, glow_r=6, max_w=W * .9),
+    "bold":   lambda s: text_img(s.upper(), "black", 92, PURPLE, glow_r=6, max_w=W * .9),
+    "script": lambda s: text_img(s, "script", 120, TEAL, glow_r=6, max_w=W * .9),
+    "teal":   lambda s: text_img(s.upper(), "black", 104, TEAL, glow_r=6, max_w=W * .9),
+    "mint":   lambda s: text_img(s.upper(), "cond", 190, MINT, glow=MINT_GLOW, max_w=W * .9),
+    "glow":   lambda s: gradient_text(s.upper(), "black", 150),
+    "strike": lambda s: strike(text_img(s.upper(), "black", 104, WHITE, glow_r=6)),
+}
+
+
+def kinetic(lines, t0, t1, cy=1000, gap=12, step=0.18, pm=None, behind=()):
+    """Phụ đề động kiểu video mẫu 5: các dòng xếp chồng giữa ngực người dẫn, mỗi dòng 1 kiểu
+    (lines = [("để mình", "thin"), ("BẢNG GIÁ", "serif"), ...]); từng dòng blur-in lần lượt.
+    Dòng có index trong `behind` nằm sau người (cần pm=PersonMask())."""
+    imgs = [KSTYLE[st](tx) for tx, st in lines]
+    hs = [im.height - 40 for im in imgs]; total = sum(hs) + gap * (len(imgs) - 1)
+    y = cy - total / 2; out = []
+    for i, im in enumerate(imgs):
+        el = El(im, W / 2, y + hs[i] / 2, t0 + i * step, t1, "blur", .16, .18, "blur")
+        out.append(Behind(el, pm) if (pm is not None and i in behind) else el)
+        y += hs[i] + gap
+    return out
