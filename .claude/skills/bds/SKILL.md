@@ -1,5 +1,5 @@
 ---
-name: bds-video-edit
+name: bds
 description: Phong cách edit video bất động sản (BĐS) dạng TikTok/Reels dọc 9:16 mà người dùng đã chọn — chữ xanh ngọc phát sáng, chữ viết tay điểm nhấn, chuyển cảnh light leak / chớp trắng, nhạc nền + SFX tự tạo. Dùng khi người dùng gửi video và nhờ "thêm text", "edit", "làm video BĐS", hoặc gửi video mẫu để "học thêm" phong cách mới (khi đó cập nhật file này).
 ---
 
