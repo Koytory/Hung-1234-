@@ -108,19 +108,17 @@ def shimmer(d=0.4):
     tt = np.arange(int(d * SR)) / SR
     return sum(np.sin(2 * np.pi * f * tt) for f in (2637, 3136, 3951)) * np.exp(-tt * 6) * (tt < d) * 0.04
 
-add(pop(1000), 0.05, 0.9); add(shimmer(), 0.08, pan=0.2)       # PALM CITY wipe
-add(pop(700), 0.55, 0.6)                                        # subline
-add(whoosh(0.6), 1.7, 0.9, pan=-0.3)                            # transition 1
-for i in range(5): add(tick(), 2.15 + i * 0.14, pan=(i % 2 - 0.5) * 0.6)
-for i in range(4): add(tick(), 2.75 + i * 0.14, pan=(i % 2 - 0.5) * 0.6)
-add(pop(1100), 3.05, 0.9)                                       # VIEW SÔNG
-add(riser(0.8), 3.25, 0.9)                                      # build up
-add(impact(), 4.05, 0.9)                                        # transition 2
-add(whoosh(0.4, up=False), 4.0, 0.6, pan=0.3)
-add(pop(800), 4.2, 0.6)
-add(ding(), 4.4, 1.0); add(ding(1975.5), 4.42, 0.5)             # BẢNG GIÁ
-add(whoosh(0.5), 5.7, 0.6)                                      # blur-out ending
-
+add(impact(), 0.0, 0.8); add(shimmer(0.6), 0.05, 1.5)          # hook title slam
+add(whoosh(0.5), 1.1, 0.9, pan=-0.3)                            # light leak 1
+add(whoosh(0.3), 1.6, 0.7, pan=0.3)                             # SA BAN smear
+add(pop(800), 1.95, 0.5)
+for i in range(8): add(tick(), 1.5 + i * 0.12, 0.6, pan=(i % 2 - 0.5) * 0.6)
+add(riser(0.5), 2.45, 0.8); add(impact(), 3.05, 0.6)           # red tint -> white flash
+add(whoosh(0.3), 3.3, 0.7, pan=0.3)                             # VIEW SONG smear
+add(pop(1100), 3.7, 0.8); add(shimmer(), 3.72)                  # glass card
+add(whoosh(0.5), 4.55, 0.9, pan=-0.3)                           # light leak 2
+add(whoosh(0.3), 5.0, 0.7, pan=0.3)                             # BANG GIA smear
+add(pop(900), 5.62, 0.9); add(ding(), 5.7, 0.9)                 # LUU VIDEO
 # duck music under the impact, master fade-out, normalise
 fade = np.minimum(1, np.maximum(0, (DUR - t_all) / 0.45))
 L *= fade; R *= fade
