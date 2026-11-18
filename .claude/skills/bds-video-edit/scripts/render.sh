@@ -5,7 +5,7 @@ set -euo pipefail
 IN="$1"; OUT="$2"; AMB="${3:-0.15}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
-export VIDEO_DUR="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 "$IN")"
+export VIDEO_DUR="$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$IN")"
 python3 -I "$HERE/make_audio.py" "$TMP/music_sfx.wav"
 HAS_AUDIO="$(ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$IN" | head -1)"
 if [ -n "$HAS_AUDIO" ]; then
